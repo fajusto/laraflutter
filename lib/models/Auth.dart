@@ -14,20 +14,28 @@ class Auth {
 
   var response;
 
-  Future<http.Response> login (String email, String password) async {
+  Future<http.Response> auth (String email, String password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    response = await http.post(strings.loginUrl,
+    response = await http.post(strings.authUrl,
       headers: {
         "Accept": "application/json"
       },
       body: {
         "email": email,
-        "password": password
+        "password": password,
+        "device_name": "HSR2203"
       }
     );
-    prefs.setString("token", response.body);
+
     this.statusCode = response.statusCode;
-    this.body = json.decode(response.body);
+    this.body = response.body;
+
+    print("statuscode: $statusCode");
+    print("token: $body");
+
+    if (this.statusCode == 200) {
+      prefs.setString("token", response.body);
+    }
     return null;
   }
 
@@ -46,6 +54,7 @@ class Auth {
     User user = User();
     user.name = data["name"];
     user.email = data["email"];
+    user.id = data["id"];
     return user;
   }
 

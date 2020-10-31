@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Strings strings = Strings();
 
 class User {
+  int id;
   String name;
   String email;
   String password;
@@ -38,7 +39,7 @@ class User {
   Future<http.Request> updateUser (int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.get("token");
-    response = await http.put("${strings.createUserUrl}/$id",
+    response = await http.put("${strings.updateUserUrl}/$id",
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token"
